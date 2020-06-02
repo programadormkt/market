@@ -171,3 +171,19 @@ export default function Profile(  ) {
         </>
     )
 }
+
+Profile.getInitialProps = async ({query}) => {
+
+    const id = Number(query.userId)
+    
+    const response = await axios(
+        `http://127.0.0.1:3333/advert/${id}`,{
+            method: 'get'
+        }
+    );
+    
+    // const adverts = response.data
+
+    // return { adverts }
+    return { response }
+}
