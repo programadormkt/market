@@ -73,18 +73,20 @@ class AdvertController {
     })
 
     await photo.move(Helpers.publicPath('uploads'),{
-      name: `image.jpg`,
+      name: `${Date.now()}.jpg`,
       overwrite: true
     });
 
     advert = {
       ...advert,
-      photo
+      photo: `http://localhost:3333/uploads/${photo.fileName}`
     }
 
     if( !photo.moved() ) return response.status(400).send({error: photo.error()});
 
-    return response.status(200).header('Content-type', 'multipart/form-data').json(advert);
+
+
+    return response.status(200).header('Content-type', 'multipart/form-data').json(photo);
 
     // try {
     //   const advert = await Advert.create({
