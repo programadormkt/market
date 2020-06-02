@@ -5,6 +5,17 @@ import BodyComponent from '../components/body';
 
 export default function Comecar() {
 
+    const [RA, setRA] = useState("20200000000");
+    const [title, setTitle] = useState("Hotdog da galera");
+    const [description, setDescription] = useState("Hotdog da galera");
+    const [address, setAddress] = useState("Av. Maria Lacerda Montenegro 850");
+    const [week, setWeek] = useState([true, false, false, false, false, true, true]);
+    const [open, setOpen] = useState("18:00");
+    const [close, setClose] = useState("23:30");
+    const [instagram, setInstagram] = useState("hotdog");
+    const [facebook, setFacebook] = useState("hotdog");
+    const [whatsapp, setWhatsapp] = useState("84999048140");
+    
     const fileUploader = useRef(null);
 
     const [URL, setURL] = useState('/assets/images/img-default.jpg');
@@ -28,11 +39,27 @@ export default function Comecar() {
 
     const publish = async () => {
 
-        var files = new FormData();
+        var data = new FormData();
         const config = { headers: { 'Content-Type': 'multipart/form-data' } };
-        files.append("uploadCommand", fileUploader.current.files[0]);
+        data.append("photo", fileUploader.current.files[0]);
+        data.append("RA", RA);
+        data.append("title", title);
+        data.append("description", description);
+        data.append("address", address);
+        data.append("week", week);
+        data.append("open", open);
+        data.append("close", close);
+        data.append("instagram", instagram);
+        data.append("facebook", facebook);
+        data.append("whatsapp", whatsapp);
 
-        await axios.post("http://127.0.0.1:3333/advert",files, config)
+        // await axios({
+        //     method: "POST",
+        //     url: "http://127.0.0.1:3333/advert",
+        //     data,
+        //     headers: { 'Content-Type': 'multipart/form-data' }
+        // })
+        await axios.post("http://127.0.0.1:3333/advert", data, config)
         .then(response => {
             console.log(response);
         })
@@ -214,18 +241,18 @@ export default function Comecar() {
                     <div className="inpImage" onClick={() => { handleClick() }}>
                         <input style={{ display: 'none' }} onChange={ () => { verifyInput() } } ref={fileUploader} id="file" type="file" />
                     </div>
-                    <input className="inpProfile" type="text" placeholder="RA do aluno" />
-                    <input className="inpProfile" type="text" placeholder="Nome do produto ou empresa" />
-                    <textarea className="textareaProfile" id="descricao" placeholder="Descrição" />
-                    <input className="inpProfile" type="text" placeholder="Endereço completo" />
+                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="RA do aluno" />
+                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="Nome do produto ou empresa" />
+                    <textarea className="textareaProfile" onChange={ e => setRA( e.target.value ) } id="descricao" placeholder="Descrição" />
+                    <input className="inpProfile" type="text" onChange={ e => setRA( e.target.value ) } placeholder="Endereço completo" />
                     <div className="twoColumns">
                         <div className="formGroup">
                             <label htmlFor="abertura">Abertura</label>
-                            <input className="inpProfile" id="abertura" type="time" placeholder="Abertura" />
+                            <input className="inpProfile" onChange={ e => setRA( e.target.value ) } id="abertura" type="time" placeholder="Abertura" />
                         </div>
                         <div className="formGroup">
                             <label htmlFor="encerramento">Encerramento</label>
-                            <input className="inpProfile" id="encerramento" type="time" placeholder="encerramento" />
+                            <input className="inpProfile" onChange={ e => setRA( e.target.value ) } id="encerramento" type="time" placeholder="encerramento" />
                         </div>
                     </div>
                     <div style={{ width: 'calc( 100% - 20px )', margin: '0 10px' }}>
@@ -261,10 +288,10 @@ export default function Comecar() {
                             </div>
                         </div>
                     </div>
-                    <input className="inpProfile" type="text" placeholder="Número do Whatsapp" />
-                    <input className="inpProfile" type="text" placeholder="Perfil do Instagram" />
-                    <input className="inpProfile" type="text" placeholder="Perfil do Facebook" />
-                    <button className="btnProfile" onClick={ () => { publish() } }>Publicar</button>
+                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="Número do Whatsapp" />
+                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="Perfil do Instagram" />
+                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="Perfil do Facebook" />
+                    <button className="btnProfile" onChange={ e => setRA( e.target.value ) } onClick={ () => { publish() } }>Publicar</button>
                 </div>
             </div>
         </BodyComponent>

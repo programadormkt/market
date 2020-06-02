@@ -41,33 +41,50 @@ class AdvertController {
    */
   async store ({ response, request }) {
 
-    // const {
-    //   user_id,
-    //   title,
-    //   description,
-    //   address,
-    //   week,
-    //   open,
-    //   close,
-    //   instagram,
-    //   facebook,
-    //   photo,
-    // } = request.all();
+    const {
+      title,
+      description,
+      address,
+      week,
+      open,
+      close,
+      instagram,
+      facebook,
+      whatsapp,
+      RA
+    } = request.all();
 
-    // const images = request.file('image', {
-    //   types: ['image'],
-    //   size: '2mb'
-    // })
+    let advert = {
+      RA,
+      whatsapp,
+      title,
+      description,
+      address,
+      week,
+      open,
+      close,
+      instagram,
+      facebook
+    }
 
-    // await images.moveAll(Helpers.tmpPath('uploads'), file => ({
-    //   name: `${Date.now()}-${file.clientName}`
-    // }))
+    const photo = request.file('photo', {
+      types: ['image'],
+      size: '2mb'
+    })
 
-    // if (!images.movedAll()) {
-    //   return images.errors()
-    // }
-    console.log(request.file('file'));
-    return response.status(200).header('Content-type', 'multipart/form-data').send(request.files());
+    await photo.move(Helpers.publicPath('uploads'),{
+      name: `image.jpg`,
+      overwrite: true
+    });
+
+    advert = {
+      ...advert,
+      photo
+    }
+
+    if( !photo.moved() ) return response.status(400).send({error: photo.error()});
+
+    return response.status(200).header('Content-type', 'multipart/form-data').json(advert);
 
     // try {
     //   const advert = await Advert.create({
