@@ -7,11 +7,11 @@ class AdvertsSchema extends Schema {
   up () {
     this.create('adverts', (table) => {
       table.increments()
-      table.integer('user_id').unsigned().references('id').inTable('users')
+      table.integer('user_id').unsigned().references('id').inTable('users').unique()
       table.string('title')
       table.string('description')
       table.string('address')
-      table.json('week')
+      table.string('week', 100)
       table.string('open')
       table.string('close')
       table.string('instagram')

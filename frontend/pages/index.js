@@ -16,7 +16,7 @@ function Home({adverts}) {
     
     const [Adverts, setAdverts] = useState(adverts.data);
 
-    const [HasMore, setHasMore] = useState(true);
+    const [HasMore, setHasMore] = useState(false);
 
     const [Page, setPage] = useState(adverts.page+1);
 
@@ -210,7 +210,7 @@ function Home({adverts}) {
                             return(
                                 <div className="advert" key={index}>
                                     <div>
-                                        <img src={`/assets/images/${item.photo}`} />
+                                        <img src={`http://127.0.0.1:3333/uploads/${item.photo}`} />
                                     </div>
                                     <div className="advertInfo">
                                         <h5>{item.title}</h5>
@@ -219,7 +219,7 @@ function Home({adverts}) {
                                         </div>
                                         <p>{`Funcionamento: ${item.open} - ${item.close}`}</p>
                                         <div className="advertShare">
-                                            <Link href={``} >
+                                            <Link href={`//api.whatsapp.com/send?phone=55${item.whatsapp}`} >
                                                 <a target="__blank" className="btnWhatsapp">
                                                     <WhatsAppIcon />
                                                 </a>

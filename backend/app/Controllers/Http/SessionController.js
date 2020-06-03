@@ -21,18 +21,18 @@ class SessionController {
   async index ({ request, response}) {
     const {
       ra,
-      whatsapp
     } = request.headers();
 
 
     try {
 
       const user = await Database
-        .from('users')
-        .where({ ra, whatsapp })
+        .table('users')
+        .innerJoin('adverts', 'users.id', 'adverts.user_id')
+        .where({ra})
         .first();
 
-        return ( user ) ? response.status(200).send(true) : response.status(200).send(false);
+        return ( Object.keys(user).length > 0 ) ? response.status(200).send(user) : response.status(200).send(false);
 
     } catch (error) {
       return response.status(400).send(error)

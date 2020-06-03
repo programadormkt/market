@@ -2,20 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import md5 from 'crypto-js/md5';
 import axios from 'axios';
-import Link from 'next/link';
 import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import { List, ListItem, ListItemText, Drawer, Divider, Avatar } from '@material-ui/core';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 
-import { getToken, login, logout } from '../services/auth';
+import { getToken, login, logout, setUser, getUSer } from '../services/auth';
 
 export default function HeaderComponent( { children } = props ) {
 
     const Router = useRouter();
 
-    const [RA, setRA] = useState("20200000000");
-
-    const [Whats, setWhats] = useState("84999048140");
+    const [RA, setRA] = useState("");
 
     const [Storage, setStorage] = useState("");
 
@@ -27,16 +24,23 @@ export default function HeaderComponent( { children } = props ) {
         await axios.get('http://127.0.0.1:3333/session',{
             headers: {
                 ra: RA,
-                whatsapp: Whats
             }
         }).then( response => {
-            if(response){
-                login( md5(Whats).toString() );
+            if(response.data){
+                login( md5(response.data).toString() );
+                setUser(response.data.id);
                 setStorage( getToken() );
             }else {
                 alert("Erro ao efetuar login. Verifique seus dados e tente novamente.");
             }
         });
+
+    }
+
+    const exit = () => {
+        logout(); 
+        setStorage(""); 
+        Router.push('/');
 
     }
 
@@ -169,18 +173,15 @@ export default function HeaderComponent( { children } = props ) {
                                     <div className="UserItemMenu">
                                         <Avatar alt="Rafael de Deus Pessoa Junior" src="/static/images/avatar/1.jpg" />
                                         <div className="UserDescription">
-                                            <Typography component="p" variant="subtitle1" style={{ color: '#193486' }}>
-                                                Nome do Aluno
-                                            </Typography>
                                             <Typography component="p" variant="subtitle2" color="textPrimary">
-                                                RA 202001010100
+                                                {`RA ${RA}`}
                                             </Typography>
                                         </div>
                                     </div>
                                     <Divider />
                                     <List>
                                         <ListItem className="btnNavigation">
-                                            <ListItemText onClick={ () => { Router.push('/user/1/advert'); }}>
+                                            <ListItemText onClick={ () => { Router.push(`/user/${getUSer()}/advert`); }}>
                                                 Meu Anúncio
                                             </ListItemText>
                                         </ListItem>
@@ -188,7 +189,7 @@ export default function HeaderComponent( { children } = props ) {
                                 </div>
                                 <div>
                                     <List>
-                                        <ListItem className="btnExit" onClick={ () => { logout(); setStorage(""); Router.push('/'); }}>
+                                        <ListItem className="btnExit" onClick={ () => { exit(); }}>
                                             <ListItemText >
                                                 Sair
                                             </ListItemText>
@@ -202,10 +203,7 @@ export default function HeaderComponent( { children } = props ) {
                                 <Typography component="h4" variant="subtitle1" align="center" style={{ color: '#193486' }}>Faça login</Typography>
                                 <Divider className="divider" />
                                 <div className="formGroup">
-                                    <input type="text" placeholder="RA" value="20200000000" onChange={ (e) => setRA(e.target.value) } />
-                                </div>
-                                <div className="formGroup">
-                                    <input type="tel" placeholder="Whatsapp" value="84999048140" onChange={ (e) => setWhats(e.target.value) } />
+                                    <input type="text" placeholder="RA" onChange={ (e) => setRA(e.target.value) } />
                                 </div>
                                 <Typography component="p" onClick={ () => { Router.push('/begin') }} className="btnCadastrese">Cadastre-se</Typography>
                                 <div className="formGroup">

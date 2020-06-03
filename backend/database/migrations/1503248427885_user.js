@@ -15,13 +15,6 @@ class UserSchema extends Schema {
 
   down () {
     this.drop('users')
-
-    this.create('users', (table) => {
-      table.increments()
-      table.string('ra', 80).notNullable().unique()
-      table.string('whatsapp', 15).notNullable().unique()
-      table.timestamps()
-    })
   }
 }
 

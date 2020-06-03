@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const WeekComponent = ({week}) => {
-    
-    const [Week, setWeek] = useState([])
-    
+        
     const weekday = [
         "D",
         "S",
@@ -13,16 +11,6 @@ const WeekComponent = ({week}) => {
         "S",
         "S"
     ]
-
-    const init = () => {
-        for (var [key, value] of Object.entries(week)) {
-            setWeek( prevWeek => [ ...prevWeek, key ])
-        }
-    }
-
-    useEffect(() => {
-        init();
-    }, [week])
     
     return(
         <>
@@ -43,13 +31,11 @@ const WeekComponent = ({week}) => {
                 background-color: #999;
             }
         `}</style>
-            <span className={`advertInfoDay ${ (week[0]) ? 'open': 'close'}`}>{weekday[0]}</span>
-            <span className={`advertInfoDay ${ (week[1]) ? 'open': 'close'}`}>{weekday[1]}</span>
-            <span className={`advertInfoDay ${ (week[2]) ? 'open': 'close'}`}>{weekday[2]}</span>
-            <span className={`advertInfoDay ${ (week[3]) ? 'open': 'close'}`}>{weekday[3]}</span>
-            <span className={`advertInfoDay ${ (week[4]) ? 'open': 'close'}`}>{weekday[4]}</span>
-            <span className={`advertInfoDay ${ (week[5]) ? 'open': 'close'}`}>{weekday[5]}</span>
-            <span className={`advertInfoDay ${ (week[6]) ? 'open': 'close'}`}>{weekday[6]}</span>
+            {
+                week.map( (item, index) => {
+                    return <span key={index} className={`advertInfoDay ${ (item) ? 'open': 'close'}`}>{weekday[index]}</span>
+                })
+            }
         </>
     )
 }

@@ -2,19 +2,22 @@ import React, {useRef, useState} from 'react';
 import axios from 'axios';
 import HeadComponent from '../components/head';
 import BodyComponent from '../components/body';
+import { useRouter } from 'next/router';
 
 export default function Comecar() {
 
-    const [RA, setRA] = useState("20200000000");
-    const [title, setTitle] = useState("Hotdog da galera");
-    const [description, setDescription] = useState("Hotdog da galera");
-    const [address, setAddress] = useState("Av. Maria Lacerda Montenegro 850");
-    const [week, setWeek] = useState([true, false, false, false, false, true, true]);
-    const [open, setOpen] = useState("18:00");
-    const [close, setClose] = useState("23:30");
-    const [instagram, setInstagram] = useState("hotdog");
-    const [facebook, setFacebook] = useState("hotdog");
-    const [whatsapp, setWhatsapp] = useState("84999048140");
+    const History = useRouter();
+
+    const [RA, setRA] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [address, setAddress] = useState("");
+    const [week, setWeek] = useState([false, false, false, false, false, false, false]);
+    const [open, setOpen] = useState("00:00");
+    const [close, setClose] = useState("00:00");
+    const [instagram, setInstagram] = useState("");
+    const [facebook, setFacebook] = useState("");
+    const [whatsapp, setWhatsapp] = useState("");
     
     const fileUploader = useRef(null);
 
@@ -37,6 +40,12 @@ export default function Comecar() {
 
     }
 
+    const updateWeek = async (day) => {
+        var newWeek = [...week];
+        newWeek[day] = !week[day];
+        await setWeek(newWeek);
+    }
+
     const publish = async () => {
 
         var data = new FormData();
@@ -46,63 +55,23 @@ export default function Comecar() {
         data.append("title", title);
         data.append("description", description);
         data.append("address", address);
-        data.append("week", week);
+        data.append("week", JSON.stringify(week));
         data.append("open", open);
         data.append("close", close);
         data.append("instagram", instagram);
         data.append("facebook", facebook);
         data.append("whatsapp", whatsapp);
 
-        // await axios({
-        //     method: "POST",
-        //     url: "http://127.0.0.1:3333/advert",
-        //     data,
-        //     headers: { 'Content-Type': 'multipart/form-data' }
-        // })
+        console.log
+
         await axios.post("http://127.0.0.1:3333/advert", data, config)
         .then(response => {
-            console.log(response);
+            console.log(response)
+            History.push(`/user/${response.data}/advert`);
         })
         .catch(err => {
             console.log(err);
         });
-
-
-        // var file = new FormData();
-        // const date = new Date();
-        // const fileName = date.getDay() + date.getMonth() + date.getFullYear() + date.getHours() + date.getMinutes() + date.getSeconds();
-
-        // file.append('file', fileUploader.current.files[0], 'file');
-
-        // await axios({
-        //     url: 'http://127.0.0.1:3333/advert',
-        //     method: 'POST',
-        //     headers: { 'content-type': 'multipart/form-data' },
-        //     data: {
-        //         file
-        //     }
-        // })
-        // .then(res => {
-        //     console.log(res.data + 'this is data after api call');
-        // })
-        // .catch(err => console.log(err));
-
-
-        // axios({
-        //     method: 'post',
-        //     url: 'http://127.0.0.1/advert',
-        //     data: photo,
-        //     headers: {'Content-Type': 'multipart/form-data' }
-        // })
-        // .then(function (response) {
-        //     //handle success
-        //     console.log(response);
-        // })
-        // .catch(function (response) {
-        //     //handle error
-        //     console.log(response);
-        // });
-
     }
 
 
@@ -242,56 +211,56 @@ export default function Comecar() {
                         <input style={{ display: 'none' }} onChange={ () => { verifyInput() } } ref={fileUploader} id="file" type="file" />
                     </div>
                     <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="RA do aluno" />
-                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="Nome do produto ou empresa" />
-                    <textarea className="textareaProfile" onChange={ e => setRA( e.target.value ) } id="descricao" placeholder="Descrição" />
-                    <input className="inpProfile" type="text" onChange={ e => setRA( e.target.value ) } placeholder="Endereço completo" />
+                    <input className="inpProfile" onChange={ e => setTitle( e.target.value ) } type="text" placeholder="Nome do produto ou empresa" />
+                    <textarea className="textareaProfile" onChange={ e => setDescription( e.target.value ) } id="descricao" placeholder="Descrição" />
+                    <input className="inpProfile" type="text" onChange={ e => setAddress( e.target.value ) } placeholder="Endereço completo" />
                     <div className="twoColumns">
                         <div className="formGroup">
                             <label htmlFor="abertura">Abertura</label>
-                            <input className="inpProfile" onChange={ e => setRA( e.target.value ) } id="abertura" type="time" placeholder="Abertura" />
+                            <input className="inpProfile" onChange={ e => setOpen( e.target.value ) } id="abertura" type="time" placeholder="Abertura" />
                         </div>
                         <div className="formGroup">
                             <label htmlFor="encerramento">Encerramento</label>
-                            <input className="inpProfile" onChange={ e => setRA( e.target.value ) } id="encerramento" type="time" placeholder="encerramento" />
+                            <input className="inpProfile" onChange={ e => setClose( e.target.value ) } id="encerramento" type="time" placeholder="encerramento" />
                         </div>
                     </div>
                     <div style={{ width: 'calc( 100% - 20px )', margin: '0 10px' }}>
                         <legend style={{ color: '#555', fontSize: '12px', textAlign: 'center' }}>Dias de funcionamento</legend>
                         <div className="sevenColumns">
                             <div className="formGroup">
-                                <input type="checkbox" className="inpProfile" name="dom" id="dom"/>
+                                <input type="checkbox" className="inpProfile" onClick={ () => updateWeek(0)} name="dom" id="dom"/>
                                 <label htmlFor="dom">Dom</label>
                             </div>
                             <div className="formGroup">
-                                <input type="checkbox" className="inpProfile" name="seg" id="seg"/>
+                                <input type="checkbox" className="inpProfile" onClick={ () => updateWeek(1)} name="seg" id="seg"/>
                                 <label htmlFor="seg">Seg</label>
                             </div>
                             <div className="formGroup">
-                                <input type="checkbox" className="inpProfile" name="ter" id="ter"/>
+                                <input type="checkbox" className="inpProfile" onClick={ () => updateWeek(2)} name="ter" id="ter"/>
                                 <label htmlFor="ter">Ter</label>
                             </div>
                             <div className="formGroup">
-                                <input type="checkbox" className="inpProfile" name="qua" id="qua"/>
+                                <input type="checkbox" className="inpProfile" onClick={ () => updateWeek(3)} name="qua" id="qua"/>
                                 <label htmlFor="qua">Qua</label>
                             </div>
                             <div className="formGroup">
-                                <input type="checkbox" className="inpProfile" name="qui" id="qui"/>
+                                <input type="checkbox" className="inpProfile" onClick={ () => updateWeek(4)} name="qui" id="qui"/>
                                 <label htmlFor="qui">Qui</label>
                             </div>
                             <div className="formGroup">
-                                <input type="checkbox" className="inpProfile" name="sex" id="sex"/>
+                                <input type="checkbox" className="inpProfile" onClick={ () => updateWeek(5)} name="sex" id="sex"/>
                                 <label htmlFor="sex">Sex</label>
                             </div>
                             <div className="formGroup">
-                                <input type="checkbox" className="inpProfile" name="sab" id="sab"/>
+                                <input type="checkbox" className="inpProfile" onClick={ () => updateWeek(6)} name="sab" id="sab"/>
                                 <label htmlFor="sab">Sab</label>
                             </div>
                         </div>
                     </div>
-                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="Número do Whatsapp" />
-                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="Perfil do Instagram" />
-                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="Perfil do Facebook" />
-                    <button className="btnProfile" onChange={ e => setRA( e.target.value ) } onClick={ () => { publish() } }>Publicar</button>
+                    <input className="inpProfile" onChange={ e => setWhatsapp( e.target.value ) } type="text" placeholder="Número do Whatsapp" />
+                    <input className="inpProfile" onChange={ e => setInstagram( e.target.value ) } type="text" placeholder="Perfil do Instagram" />
+                    <input className="inpProfile" onChange={ e => setFacebook( e.target.value ) } type="text" placeholder="Perfil do Facebook" />
+                    <button className="btnProfile" onClick={ () => { publish() } }>Publicar</button>
                 </div>
             </div>
         </BodyComponent>

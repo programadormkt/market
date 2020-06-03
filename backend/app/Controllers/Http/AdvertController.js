@@ -1,5 +1,8 @@
 'use strict'
 
+const fs = require('fs');
+const path = require('path');
+
 const Database = use('Database');
 const Advert = use('App/Models/Advert');
 const Helpers = use('Helpers');
@@ -54,19 +57,6 @@ class AdvertController {
       RA
     } = request.all();
 
-    let advert = {
-      RA,
-      whatsapp,
-      title,
-      description,
-      address,
-      week,
-      open,
-      close,
-      instagram,
-      facebook
-    }
-
     const photo = request.file('photo', {
       types: ['image'],
       size: '2mb'
@@ -77,35 +67,49 @@ class AdvertController {
       overwrite: true
     });
 
-    advert = {
-      ...advert,
-      photo: `http://localhost:3333/uploads/${photo.fileName}`
-    }
+    const urlPhoto = `${photo.fileName}`;
 
     if( !photo.moved() ) return response.status(400).send({error: photo.error()});
 
+    try {
+
+      const user_id = await Database
+        .table('users')
+        .insert({
+          RA,
+          whatsapp,
+          created_at: Database.fn.now(),
+          updated_at : Database.fn.now()
+        });
+
+      if( !user_id[0] ) return response.status(400).send({error: "Erro ao criar o usuário"});
 
 
-    return response.status(200).header('Content-type', 'multipart/form-data').json(photo);
+      const advert_id = await Database
+        .table('adverts')
+        .insert({
+          user_id: user_id[0],
+          title,
+          description,
+          address,
+          week,
+          open,
+          close,
+          instagram,
+          facebook,
+          photo: urlPhoto,
+          created_at: Database.fn.now(),
+          updated_at : Database.fn.now()
+        });
 
-    // try {
-    //   const advert = await Advert.create({
-    //     user_id,
-    //     title,
-    //     description,
-    //     address,
-    //     week: JSON.stringify(week),
-    //     open,
-    //     close,
-    //     instagram,
-    //     facebook,
-    //     photo
-    //   });
+      console.log(advert_id[0]);
 
-    //   return response.status(200).send(advert);
-    // } catch (error) {
-    //   return response.status(400).send(error);
-    // }
+      if( !advert_id ) return response.status(400).send({error: "Erro ao criar anúncio"});
+
+      return response.status(200).send(advert_id[0]);
+    } catch (error) {
+      return response.status(400).send({error, message: "Erro ao criar novo anúncio"});
+    }
   }
 
   /**
@@ -121,7 +125,10 @@ class AdvertController {
     const { id } = params;
 
     try {
-      const advert = await Advert.find(id);
+      const advert = await Database
+        .table('adverts')
+        .innerJoin('users', 'adverts.user_id', 'users.id')
+        .first();
       return response.status(200).send(advert);
     } catch (error) {
       return response.status(404).send(error);
@@ -137,7 +144,9 @@ class AdvertController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+
     const { id } = params;
+
     const {
       title,
       description,
@@ -147,25 +156,74 @@ class AdvertController {
       close,
       instagram,
       facebook,
-      photo
+      whatsapp
     } = request.all();
 
-    try {
-      const advert = await Advert.find(id);
-      advert.save({
-        title,
-        description,
-        address,
-        week: JSON.stringify(week),
-        open,
-        close,
-        instagram,
-        facebook,
-        photo
+    var newDataAdvert = {
+      title,
+      description,
+      address,
+      week,
+      open,
+      close,
+      instagram,
+      facebook
+    }
+
+    const photo = request.file('photo', {
+      types: ['image'],
+      size: '2mb'
+    });
+
+    if( photo ) {
+
+      var advert = await Database.select("photo").from("adverts").where("id", id).first();
+
+      const file = await Helpers.publicPath(`/uploads/${advert.photo}`);
+
+      await fs.unlinkSync(file);
+
+      await photo.move(Helpers.publicPath('uploads'),{
+        name: `${Date.now()}.jpg`,
+        overwrite: true
       });
-      return response.status(200).send(advert);
+
+      if( !photo.moved() ) return response.status(400).send({error: photo.error()});
+
+      newDataAdvert = {
+        ...newDataAdvert,
+        photo: photo.fileName
+      }
+
+    }
+
+    try {
+
+      const updatedAdvert = await Database
+      .table('adverts')
+      .where('id', id)
+      .update({
+        ...newDataAdvert,
+        updated_at : Database.fn.now()
+      });
+
+      if( !updatedAdvert ) return response.status(400).send({error: "Erro ao atualizar anúncio"});
+
+      const user_id = await Database.select('user_id').table('adverts').where({'id': id}).first();
+
+      const updatedUser = await Database
+        .table('users')
+        .where('id', user_id.user_id)
+        .update({
+          whatsapp,
+          updated_at : Database.fn.now()
+        });
+
+      if( !updatedUser ) return response.status(400).send({error: "Erro ao criar o usuário"});
+
+      return response.status(200).send(updatedAdvert);
     } catch (error) {
-      return response.status(404).send(error);
+      return response.status(400).send({error, message: "Erro ao tentar atualizar"});
     }
   }
 
