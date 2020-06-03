@@ -1,12 +1,12 @@
 import React, {useRef, useState} from 'react';
 import axios from 'axios';
-import HeadComponent from '../components/head';
-import BodyComponent from '../components/body';
+import HeadComponent from '../../components/head';
+import BodyComponent from '../../components/body';
 import { useRouter } from 'next/router';
 
 export default function Comecar() {
 
-    const History = useRouter();
+    const Router = useRouter();
 
     const [RA, setRA] = useState("");
     const [title, setTitle] = useState("");
@@ -67,7 +67,7 @@ export default function Comecar() {
         await axios.post("http://127.0.0.1:3333/advert", data, config)
         .then(response => {
             console.log(response)
-            History.push(`/user/${response.data}/advert`);
+            Router.push(`/user/${response.data}/advert`);
         })
         .catch(err => {
             console.log(err);
@@ -203,7 +203,12 @@ export default function Comecar() {
             }
         }
         `}</style>
-        <HeadComponent />
+        <HeadComponent 
+            url={Router.pathname}
+            title="Market - UNIFACEX"
+            description="Página de cadastro dos produtos e serviços oferecidos pelos alunos e professores do UNIFACEX"
+            image={`${Router.pathname}/favicon.ico`}
+        />
         <BodyComponent>
             <div className="containerProfile">
                 <div className="contentProfile">

@@ -6,13 +6,18 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
+import { useRouter } from 'next/router';
 
 import HeadComponent from '../components/head';
 import BodyComponent from '../components/body';
 import WeekComponent from '../components/week';
 
 
+export const config = { amp: 'hybrid' }
+
 function Home({adverts}) {
+
+    const Router = useRouter();
     
     const [Adverts, setAdverts] = useState(adverts.data);
 
@@ -182,7 +187,12 @@ function Home({adverts}) {
                     outline: none;
                 }
             `}</style>
-            <HeadComponent />
+            <HeadComponent 
+                url={Router.pathname}
+                title="Market - UNIFACEX"
+                description="Página de divulgação dos produtos e serviços oferecidos pelos alunos e professores do UNIFACEX"
+                image={`${Router.pathname}/favicon.ico`}
+            />
             <BodyComponent>
                 <div className="content">
                     <div className="finder">

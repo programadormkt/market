@@ -213,7 +213,12 @@ function Profile({advert}) {
             }
         }
         `}</style>
-        <HeadComponent />
+        <HeadComponent 
+            url={Router.pathname}
+            title="Market - UNIFACEX"
+            description="Página de dados do produto ou serviço oferecido"
+            image={`${Router.pathname}/favicon.ico`}
+        />
         <BodyComponent>
             <div className="containerProfile">
                 <div className="contentProfile">
