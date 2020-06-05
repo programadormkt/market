@@ -12,9 +12,6 @@ import HeadComponent from '../components/head';
 import BodyComponent from '../components/body';
 import WeekComponent from '../components/week';
 
-
-export const config = { amp: 'hybrid' }
-
 function Home({adverts}) {
 
     const Router = useRouter();
