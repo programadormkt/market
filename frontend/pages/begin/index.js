@@ -51,7 +51,7 @@ export default function Comecar() {
         var data = new FormData();
         const config = { headers: { 'Content-Type': 'multipart/form-data' } };
         data.append("photo", fileUploader.current.files[0]);
-        data.append("RA", RA);
+        data.append("CPF", RA);
         data.append("title", title);
         data.append("description", description);
         data.append("address", address);
@@ -215,7 +215,7 @@ export default function Comecar() {
                     <div className="inpImage" onClick={() => { handleClick() }}>
                         <input style={{ display: 'none' }} onChange={ () => { verifyInput() } } ref={fileUploader} id="file" type="file" />
                     </div>
-                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="RA do aluno" />
+                    <input className="inpProfile" onChange={ e => setRA( e.target.value ) } type="text" placeholder="CPF" />
                     <input className="inpProfile" onChange={ e => setTitle( e.target.value ) } type="text" placeholder="Nome do produto ou empresa" />
                     <textarea className="textareaProfile" onChange={ e => setDescription( e.target.value ) } id="descricao" placeholder="Descrição" />
                     <input className="inpProfile" type="text" onChange={ e => setAddress( e.target.value ) } placeholder="Endereço completo" />

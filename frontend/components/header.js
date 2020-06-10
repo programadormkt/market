@@ -171,10 +171,10 @@ export default function HeaderComponent( { children } = props ) {
                             <div className="Menu">
                                 <div>
                                     <div className="UserItemMenu">
-                                        <Avatar alt="Rafael de Deus Pessoa Junior" src="/static/images/avatar/1.jpg" />
+                                        <Avatar src="/static/images/avatar/1.jpg" />
                                         <div className="UserDescription">
                                             <Typography component="p" variant="subtitle2" color="textPrimary">
-                                                {`RA ${RA}`}
+                                                {`CPF ${RA}`}
                                             </Typography>
                                         </div>
                                     </div>
@@ -203,7 +203,7 @@ export default function HeaderComponent( { children } = props ) {
                                 <Typography component="h4" variant="subtitle1" align="center" style={{ color: '#193486' }}>Faça login</Typography>
                                 <Divider className="divider" />
                                 <div className="formGroup">
-                                    <input type="text" placeholder="RA" onChange={ (e) => setRA(e.target.value) } />
+                                    <input type="text" placeholder="CPF" onChange={ (e) => setRA(e.target.value) } />
                                 </div>
                                 <Typography component="p" onClick={ () => { Router.push('/begin') }} className="btnCadastrese">Cadastre-se</Typography>
                                 <div className="formGroup">
