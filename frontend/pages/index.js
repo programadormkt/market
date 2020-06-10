@@ -28,7 +28,7 @@ function Home({adverts}) {
     const fetchData = async () => {
 
         await axios.get(
-            `http://127.0.0.1:3333/advert`,{
+            `http://127.0.0.1:3030/advert`,{
             headers: {
                 page: Page
             }
@@ -220,7 +220,7 @@ function Home({adverts}) {
                             return(
                                 <div className="advert" key={index}>
                                     <div>
-                                        <img src={`http://127.0.0.1:3333/uploads/${item.photo}`} />
+                                        <img src={`http://127.0.0.1:3030/uploads/${item.photo}`} />
                                     </div>
                                     <div className="advertInfo">
                                         <h5>{item.title}</h5>
@@ -260,7 +260,7 @@ function Home({adverts}) {
 Home.getInitialProps = async () => {
 
     const response = await axios(
-        `http://127.0.0.1:3333/advert`,{
+        `http://127.0.0.1:3030/advert`,{
             method: 'get',
             headers: {
                 page: 1

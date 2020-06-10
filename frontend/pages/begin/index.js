@@ -64,7 +64,7 @@ export default function Comecar() {
 
         console.log
 
-        await axios.post("http://127.0.0.1:3333/advert", data, config)
+        await axios.post("http://127.0.0.1:3030/advert", data, config)
         .then(response => {
             console.log(response)
             Router.push(`/user/${response.data}/advert`);
