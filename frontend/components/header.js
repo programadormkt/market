@@ -21,7 +21,7 @@ export default function HeaderComponent( { children } = props ) {
     const submit = async (e) => {
         e.preventDefault();
 
-        await axios.get('http://127.0.0.1:3333/session',{
+        await axios.get('http://127.0.0.1:3030/session',{
             headers: {
                 ra: RA,
             }

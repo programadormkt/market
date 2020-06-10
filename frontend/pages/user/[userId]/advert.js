@@ -22,7 +22,7 @@ function Profile({advert}) {
     
     const fileUploader = useRef(null);
 
-    const [URL, setURL] = useState(`http://127.0.0.1:3333/uploads/${advert.photo}`);
+    const [URL, setURL] = useState(`http://127.0.0.1:3030/uploads/${advert.photo}`);
 
     const handleClick = () => {
         fileUploader.current.click();
@@ -63,7 +63,7 @@ function Profile({advert}) {
         data.append("facebook", facebook);
         data.append("whatsapp", whatsapp);
 
-        await axios.put(`http://127.0.0.1:3333/advert/${Router.query.userId}`, data, config)
+        await axios.put(`http://127.0.0.1:3030/advert/${Router.query.userId}`, data, config)
         .then(response => {
             if(response.data) {
                 alert("Dados atualizados com sucesso!");
@@ -288,7 +288,7 @@ Profile.getInitialProps = async ({query}) => {
     const id = query.userId;
 
     const response = await axios(
-        `http://127.0.0.1:3333/advert/${id}`,{
+        `http://127.0.0.1:3030/advert/${id}`,{
             method: 'get',
         }
     );
