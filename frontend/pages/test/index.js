@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
 import axios from 'axios';
 
-function Home({adverts}) {
+function Home() {
 
     const init = async () => {
         const response = await axios(
-            `http://127.0.0.1:3030/advert`,{
+            `http://localhost:3030/advert`,{
                 method: 'get',
                 headers: {
                     page: 1
