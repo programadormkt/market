@@ -102,8 +102,6 @@ class AdvertController {
           updated_at : Database.fn.now()
         });
 
-      console.log(advert_id[0]);
-
       if( !advert_id ) return response.status(400).send({error: "Erro ao criar anúncio"});
 
       return response.status(200).send(advert_id[0]);
