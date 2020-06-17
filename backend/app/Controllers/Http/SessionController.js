@@ -23,20 +23,14 @@ class SessionController {
       ra,
     } = request.headers();
 
+    const user = await Database
+      .table('users')
+      .innerJoin('adverts', 'users.id', 'adverts.user_id')
+      .where({ra})
+      .first();
 
-    try {
+    return ( user && Object.keys(user).length > 0 ) ? response.status(200).send(user) : response.status(200).send(false);
 
-      const user = await Database
-        .table('users')
-        .innerJoin('adverts', 'users.id', 'adverts.user_id')
-        .where({ra})
-        .first();
-
-        return ( Object.keys(user).length > 0 ) ? response.status(200).send(user) : response.status(200).send(false);
-
-    } catch (error) {
-      return response.status(400).send(error)
-    }
   }
 }
 
