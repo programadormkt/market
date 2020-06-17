@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
-import axios from 'axios';
+import api from '../../services/api';
 
 function Home() {
 
     const init = async () => {
-        const response = await axios(
-            `http://localhost:3030/advert`,{
+        const response = await api(
+            `/advert`,{
                 method: 'get',
                 headers: {
                     page: 1

@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import HeadComponent from '../../components/head';
 import BodyComponent from '../../components/body';
 import { useRouter } from 'next/router';
@@ -64,7 +64,7 @@ export default function Comecar() {
 
         console.log
 
-        await axios.post("http://127.0.0.1:3030/advert", data, config)
+        await api.post("/advert", data, config)
         .then(response => {
             console.log(response)
             Router.push(`/user/${response.data}/advert`);

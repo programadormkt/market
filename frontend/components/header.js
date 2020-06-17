@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import md5 from 'crypto-js/md5';
 import axios from 'axios';
+import api from '../services/api';
 import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import { List, ListItem, ListItemText, Drawer, Divider, Avatar } from '@material-ui/core';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
@@ -21,7 +22,7 @@ export default function HeaderComponent( { children } = props ) {
     const submit = async (e) => {
         e.preventDefault();
 
-        await axios.get('http://127.0.0.1:3030/session',{
+        await axios.get('http://servermarket.unifacex.com.br/session',{
             headers: {
                 ra: RA,
             }
@@ -207,7 +208,7 @@ export default function HeaderComponent( { children } = props ) {
                                 </div>
                                 <Typography component="p" onClick={ () => { Router.push('/begin') }} className="btnCadastrese">Cadastre-se</Typography>
                                 <div className="formGroup">
-                                    <button className="btnLogin" onClick={ (e) => { submit(e); } }>Enviar</button>
+                                    <button className="btnLogin" onClick={ (e) => { submit(e); } }>Login</button>
                                 </div>
                             </form>
                         )

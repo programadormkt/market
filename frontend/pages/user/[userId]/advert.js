@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from 'react';
 import HeadComponent from '../../../components/head';
 import BodyComponent from '../../../components/body';
-import axios from "axios";
+import api from "../../../services/api";
 import { useRouter } from 'next/router';
 import {getUSer} from '../../../services/auth';
 
@@ -22,7 +22,7 @@ function Profile({advert}) {
     
     const fileUploader = useRef(null);
 
-    const [URL, setURL] = useState(`http://127.0.0.1:3030/uploads/${advert.photo}`);
+    const [URL, setURL] = useState(`http://servermarket.unifacex.com.br/uploads/${advert.photo}`);
 
     const handleClick = () => {
         fileUploader.current.click();
@@ -63,7 +63,7 @@ function Profile({advert}) {
         data.append("facebook", facebook);
         data.append("whatsapp", whatsapp);
 
-        await axios.put(`http://127.0.0.1:3030/advert/${Router.query.userId}`, data, config)
+        await api.put(`/advert/${Router.query.userId}`, data, config)
         .then(response => {
             if(response.data) {
                 alert("Dados atualizados com sucesso!");
@@ -287,8 +287,8 @@ Profile.getInitialProps = async ({query}) => {
 
     const id = query.userId;
 
-    const response = await axios(
-        `http://127.0.0.1:3030/advert/${id}`,{
+    const response = await api(
+        `/advert/${id}`,{
             method: 'get',
         }
     );

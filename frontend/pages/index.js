@@ -8,6 +8,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import { useRouter } from 'next/router';
 
+import api from '../services/api';
 import HeadComponent from '../components/head';
 import BodyComponent from '../components/body';
 import WeekComponent from '../components/week';
@@ -24,8 +25,8 @@ function Home({adverts}) {
 
     const fetchData = async () => {
 
-        await axios.get(
-            `http://127.0.0.1:3030/advert`,{
+        await api.get(
+            `/advert`,{
             headers: {
                 page: Page
             }
@@ -217,7 +218,7 @@ function Home({adverts}) {
                             return(
                                 <div className="advert" key={index}>
                                     <div>
-                                        <img src={`http://127.0.0.1:3030/uploads/${item.photo}`} />
+                                        <img src={`http://servermarket.unifacex.com.br/uploads/${item.photo}`} />
                                     </div>
                                     <div className="advertInfo">
                                         <h5>{item.title}</h5>
@@ -256,15 +257,15 @@ function Home({adverts}) {
 
 Home.getInitialProps = async () => {
 
-    const response = await axios(
-        `http://127.0.0.1:3030/advert`,{
+    const response = await api(
+        `/advert`,{
             method: 'get',
             headers: {
                 page: 1
             } 
         }
     );
-    
+
     const adverts = response.data
 
     return { adverts  }
